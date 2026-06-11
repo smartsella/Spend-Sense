@@ -40,7 +40,7 @@ const App = () => {
     <ThemeProvider>
       <AuthProvider>
         <FinanceProvider>
-          <Router>
+          <Router basename={import.meta.env.BASE_URL}>
             <Suspense fallback={<SkeletonLoaderPanel />}>
               <Routes>
                 {/* Public routes */}
