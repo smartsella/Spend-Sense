@@ -5,6 +5,7 @@ import { AuthProvider } from './context/AuthContext';
 import { FinanceProvider } from './context/FinanceContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import DashboardLayout from './layouts/DashboardLayout';
+import RetroGameLoader from './components/RetroGameLoader';
 
 // Lazy loading all pages for optimal performance
 const Login = lazy(() => import('./pages/Login'));
@@ -41,7 +42,7 @@ const App = () => {
       <AuthProvider>
         <FinanceProvider>
           <Router basename={import.meta.env.BASE_URL}>
-            <Suspense fallback={<SkeletonLoaderPanel />}>
+            <Suspense fallback={<RetroGameLoader />}>
               <Routes>
                 {/* Public routes */}
                 <Route path="/login" element={<Login />} />
