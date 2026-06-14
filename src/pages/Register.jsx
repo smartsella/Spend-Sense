@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { OnboardingIllustration } from '../components/Illustrations';
 import { FiUser, FiMail, FiLock, FiCamera, FiAlertCircle } from 'react-icons/fi';
+import logoImg from '../assets/logo.jpg';
 
 const Register = () => {
   const { register, error, setError } = useAuth();
@@ -71,8 +72,8 @@ const Register = () => {
         {/* Left Side: Form */}
         <div className="md:col-span-7 p-6 sm:p-10 flex flex-col justify-center">
           <div className="mb-6">
-            <div className="inline-flex w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 items-center justify-center shadow-lg shadow-indigo-500/25 mb-4">
-              <span className="text-white font-heading font-black text-xl">S</span>
+            <div className="inline-flex w-10 h-10 rounded-xl overflow-hidden items-center justify-center shadow-lg shadow-indigo-500/25 mb-4">
+              <img src={logoImg} alt="SpendSense Logo" className="w-full h-full object-cover" />
             </div>
             <h2 className="font-heading font-extrabold text-2xl sm:text-3xl text-gray-800 dark:text-white leading-tight">
               Create Account

@@ -3,6 +3,8 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useFinance } from '../context/FinanceContext';
+import { getProfileImageUrl } from '../services/api';
+import logoImg from '../assets/logo.jpg';
 import {
   FiGrid,
   FiTrendingUp,
@@ -46,16 +48,7 @@ const DashboardLayout = ({ children }) => {
     { name: 'Financial Learning', path: '/financial-learning', icon: FiBookOpen },
   ];
 
-  const getProfileImageUrl = (imagePath) => {
-    if (!imagePath) return '';
-    if (imagePath.startsWith('http') || imagePath.startsWith('https')) {
-      return imagePath;
-    }
-    const apiBase = import.meta.env.VITE_API_URL 
-      ? import.meta.env.VITE_API_URL.replace('/api', '') 
-      : 'http://localhost:5000';
-    return `${apiBase}${imagePath}`;
-  };
+
 
   const handleLogout = () => {
     logout();
@@ -111,7 +104,7 @@ const DashboardLayout = ({ children }) => {
           <Link
             to="/settings"
             onClick={() => setMobileOpen(false)}
-            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider text-gray-650 dark:text-gray-300 hover:bg-indigo-500/10 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider text-gray-650 dark:text-gray-300 hover:bg-indigo-500/10 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors whitespace-nowrap"
           >
             <FiSettings className="text-sm shrink-0" />
             <span>Settings</span>
@@ -120,7 +113,7 @@ const DashboardLayout = ({ children }) => {
           {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
-            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider text-gray-650 dark:text-gray-300 hover:bg-indigo-500/10 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors w-full text-left cursor-pointer"
+            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider text-gray-650 dark:text-gray-300 hover:bg-indigo-500/10 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors w-full text-left cursor-pointer whitespace-nowrap"
           >
             {theme === 'dark' ? <FiSun className="text-sm shrink-0" /> : <FiMoon className="text-sm shrink-0" />}
             <span>{theme === 'dark' ? 'Light Theme' : 'Dark Theme'}</span>
@@ -132,7 +125,7 @@ const DashboardLayout = ({ children }) => {
               setMobileOpen(false);
               setLogoutConfirmOpen(true);
             }}
-            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider text-red-650 dark:text-red-400 hover:bg-red-500/10 transition-colors w-full text-left cursor-pointer font-bold"
+            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider text-red-650 dark:text-red-400 hover:bg-red-500/10 transition-colors w-full text-left cursor-pointer font-bold whitespace-nowrap"
           >
             <FiLogOut className="text-sm shrink-0" />
             <span>Logout</span>
@@ -145,11 +138,11 @@ const DashboardLayout = ({ children }) => {
   return (
     <div className="min-h-screen flex font-sans overflow-x-hidden">
       {/* Sidebar - Desktop */}
-      <aside className="hidden lg:flex flex-col w-66 bg-[var(--sidebar-bg)] border-r border-gray-200/50 dark:border-gray-800/40 rounded-none m-0 h-screen sticky top-0 p-5 z-30 transition-all">
+      <aside className="hidden lg:flex flex-col w-64 bg-[var(--sidebar-bg)] border-r border-gray-200/50 dark:border-gray-800/40 rounded-none m-0 h-screen sticky top-0 p-5 z-30 transition-all">
         {/* Logo Section */}
         <div className="flex items-center gap-3 mb-6 shrink-0">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-            <span className="text-white font-heading font-black text-xl">📈</span>
+          <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center shadow-lg shadow-indigo-500/20">
+            <img src={logoImg} alt="SpendSense Logo" className="w-full h-full object-cover" />
           </div>
           <div>
             <h1 className="font-heading font-bold text-base leading-none tracking-wide text-gray-800 dark:text-gray-100">
@@ -162,7 +155,7 @@ const DashboardLayout = ({ children }) => {
         </div>
 
         {/* Scrollable Navigation Items */}
-        <nav className="flex-1 overflow-y-auto flex flex-col gap-1.5 pr-1 py-2 scrollbar-thin">
+        <nav className="flex-1 overflow-y-auto overflow-x-hidden flex flex-col gap-1.5 pr-1 py-2 scrollbar-thin">
           {menuItems.map((item) => {
             const Icon = item.icon;
             // Determine active state with hash matching support to avoid duplicate selection highlights
@@ -180,7 +173,7 @@ const DashboardLayout = ({ children }) => {
               <Link
                 key={item.name + item.path}
                 to={item.path}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-xs uppercase tracking-wider transition-all duration-200 relative group ${
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-xs uppercase tracking-wider transition-all duration-200 relative group whitespace-nowrap ${
                   active
                     ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20 scale-[1.02]'
                     : 'text-gray-600 dark:text-gray-400 hover:bg-indigo-500/10 hover:text-indigo-600 dark:hover:text-indigo-400'
@@ -224,8 +217,8 @@ const DashboardLayout = ({ children }) => {
         {/* Logo Section */}
         <div className="flex items-center justify-between mb-8 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center shadow-lg">
-              <span className="text-white font-heading font-black text-xl">📈</span>
+            <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center shadow-lg">
+              <img src={logoImg} alt="SpendSense Logo" className="w-full h-full object-cover" />
             </div>
             <div>
               <h1 className="font-heading font-bold text-base leading-none tracking-wide text-gray-800 dark:text-gray-100">
@@ -246,7 +239,7 @@ const DashboardLayout = ({ children }) => {
 
 
         {/* Scrollable Navigation */}
-        <nav className="flex-1 overflow-y-auto flex flex-col gap-1.5 pr-1 py-2 scrollbar-thin">
+        <nav className="flex-1 overflow-y-auto overflow-x-hidden flex flex-col gap-1.5 pr-1 py-2 scrollbar-thin">
           {menuItems.map((item) => {
             const Icon = item.icon;
             const active = item.name === 'Dashboard'
@@ -264,7 +257,7 @@ const DashboardLayout = ({ children }) => {
                 key={'mobile-' + item.name + item.path}
                 to={item.path}
                 onClick={() => setMobileOpen(false)}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-xs uppercase tracking-wider transition-all duration-200 ${
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-xs uppercase tracking-wider transition-all duration-200 whitespace-nowrap ${
                   active
                     ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20'
                     : 'text-gray-600 dark:text-gray-400 hover:bg-indigo-500/10 hover:text-indigo-600 dark:hover:text-indigo-400'

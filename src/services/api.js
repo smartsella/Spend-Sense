@@ -22,4 +22,13 @@ API.interceptors.request.use(
   }
 );
 
+export const getProfileImageUrl = (imagePath) => {
+  if (!imagePath) return '';
+  if (imagePath.startsWith('http') || imagePath.startsWith('https')) {
+    return imagePath;
+  }
+  const apiBase = API.defaults.baseURL ? API.defaults.baseURL.replace('/api', '') : 'https://spend-sense-backend-1.onrender.com';
+  return `${apiBase}${imagePath}`;
+};
+
 export default API;

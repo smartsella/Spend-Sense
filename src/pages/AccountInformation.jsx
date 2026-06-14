@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useFinance } from '../context/FinanceContext';
 import { AchievementBadge } from '../components/Illustrations';
-import API from '../services/api';
+import API, { getProfileImageUrl } from '../services/api';
 import {
   FiUser,
   FiMail,
@@ -19,17 +19,7 @@ import {
   FiCalendar,
 } from 'react-icons/fi';
 
-// Resolves profile photo path (either local uploads path or Cloudinary URL)
-const getProfileImageUrl = (imagePath) => {
-  if (!imagePath) return '';
-  if (imagePath.startsWith('http') || imagePath.startsWith('https')) {
-    return imagePath;
-  }
-  const apiBase = import.meta.env.VITE_API_URL 
-    ? import.meta.env.VITE_API_URL.replace('/api', '') 
-    : 'http://localhost:5000';
-  return `${apiBase}${imagePath}`;
-};
+
 
 const AccountInformation = () => {
   const { user, updateProfile } = useAuth();
