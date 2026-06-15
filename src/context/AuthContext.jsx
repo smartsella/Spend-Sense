@@ -4,8 +4,19 @@ import API from '../services/api';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem('user');
+    try {
+      return savedUser ? JSON.parse(savedUser) : null;
+    } catch (e) {
+      return null;
+    }
+  });
+  const [loading, setLoading] = useState(() => {
+    const token = localStorage.getItem('token');
+    const savedUser = localStorage.getItem('user');
+    return !!(token && !savedUser);
+  });
   const [error, setError] = useState(null);
 
   // Load user profile on mount if token exists
@@ -16,11 +27,16 @@ export const AuthProvider = ({ children }) => {
         try {
           const res = await API.get('/auth/profile');
           setUser(res.data);
+          localStorage.setItem('user', JSON.stringify(res.data));
         } catch (err) {
           console.error('Session expired or invalid token');
           localStorage.removeItem('token');
+          localStorage.removeItem('user');
           setUser(null);
         }
+      } else {
+        localStorage.removeItem('user');
+        setUser(null);
       }
       setLoading(false);
     };
@@ -39,6 +55,7 @@ export const AuthProvider = ({ children }) => {
       });
       const { token, ...userData } = res.data;
       localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(userData));
       setUser(userData);
       setLoading(false);
       return res.data;
@@ -58,6 +75,7 @@ export const AuthProvider = ({ children }) => {
       const res = await API.post('/auth/login', { email, password });
       const { token, ...userData } = res.data;
       localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(userData));
       if (rememberMe) {
         localStorage.setItem('rememberedEmail', email);
       } else {
@@ -77,6 +95,7 @@ export const AuthProvider = ({ children }) => {
   // Logout
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     setUser(null);
   };
 
@@ -92,6 +111,7 @@ export const AuthProvider = ({ children }) => {
         onUploadProgress,
       });
       setUser(res.data);
+      localStorage.setItem('user', JSON.stringify(res.data));
       setLoading(false);
       return res.data;
     } catch (err) {

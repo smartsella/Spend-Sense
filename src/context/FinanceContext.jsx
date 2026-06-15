@@ -7,18 +7,72 @@ const FinanceContext = createContext();
 export const FinanceProvider = ({ children }) => {
   const { user } = useAuth();
   
-  const [incomes, setIncomes] = useState([]);
-  const [expenses, setExpenses] = useState([]);
-  const [budgets, setBudgets] = useState([]);
-  const [goals, setGoals] = useState([]);
-  const [notifications, setNotifications] = useState([]);
-  const [insights, setInsights] = useState([]);
+  const [incomes, setIncomes] = useState(() => {
+    const saved = localStorage.getItem('finance_incomes');
+    try {
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
+  });
+  const [expenses, setExpenses] = useState(() => {
+    const saved = localStorage.getItem('finance_expenses');
+    try {
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
+  });
+  const [budgets, setBudgets] = useState(() => {
+    const saved = localStorage.getItem('finance_budgets');
+    try {
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
+  });
+  const [goals, setGoals] = useState(() => {
+    const saved = localStorage.getItem('finance_goals');
+    try {
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
+  });
+  const [notifications, setNotifications] = useState(() => {
+    const saved = localStorage.getItem('finance_notifications');
+    try {
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
+  });
+  const [insights, setInsights] = useState(() => {
+    const saved = localStorage.getItem('finance_insights');
+    try {
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
+  });
   const [loading, setLoading] = useState(false);
-  const [stats, setStats] = useState({
-    totalIncome: 0,
-    totalExpense: 0,
-    currentBalance: 0,
-    totalSavings: 0,
+  const [stats, setStats] = useState(() => {
+    const saved = localStorage.getItem('finance_stats');
+    try {
+      return saved ? JSON.parse(saved) : {
+        totalIncome: 0,
+        totalExpense: 0,
+        currentBalance: 0,
+        totalSavings: 0,
+      };
+    } catch (e) {
+      return {
+        totalIncome: 0,
+        totalExpense: 0,
+        currentBalance: 0,
+        totalSavings: 0,
+      };
+    }
   });
 
   // Fetch all user transactional & goal data
@@ -42,6 +96,13 @@ export const FinanceProvider = ({ children }) => {
       setNotifications(notRes.data);
       setInsights(insRes.data);
 
+      localStorage.setItem('finance_incomes', JSON.stringify(incRes.data));
+      localStorage.setItem('finance_expenses', JSON.stringify(expRes.data));
+      localStorage.setItem('finance_budgets', JSON.stringify(budRes.data));
+      localStorage.setItem('finance_goals', JSON.stringify(goalRes.data));
+      localStorage.setItem('finance_notifications', JSON.stringify(notRes.data));
+      localStorage.setItem('finance_insights', JSON.stringify(insRes.data));
+
       // Calculate totals
       const totalIncome = incRes.data.reduce((sum, item) => sum + item.amount, 0);
       const totalExpense = expRes.data.reduce((sum, item) => sum + item.amount, 0);
@@ -49,12 +110,14 @@ export const FinanceProvider = ({ children }) => {
       // Total Savings are accumulated in Goal collections savedAmount
       const totalSavings = goalRes.data.reduce((sum, item) => sum + item.savedAmount, 0);
 
-      setStats({
+      const calculatedStats = {
         totalIncome,
         totalExpense,
         currentBalance,
         totalSavings,
-      });
+      };
+      setStats(calculatedStats);
+      localStorage.setItem('finance_stats', JSON.stringify(calculatedStats));
     } catch (err) {
       console.error('Error fetching financial data:', err);
     } finally {
@@ -78,6 +141,13 @@ export const FinanceProvider = ({ children }) => {
         currentBalance: 0,
         totalSavings: 0,
       });
+      localStorage.removeItem('finance_incomes');
+      localStorage.removeItem('finance_expenses');
+      localStorage.removeItem('finance_budgets');
+      localStorage.removeItem('finance_goals');
+      localStorage.removeItem('finance_notifications');
+      localStorage.removeItem('finance_insights');
+      localStorage.removeItem('finance_stats');
     }
   }, [user, fetchAllData]);
 

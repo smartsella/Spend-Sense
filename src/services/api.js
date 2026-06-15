@@ -27,8 +27,12 @@ export const getProfileImageUrl = (imagePath) => {
   if (imagePath.startsWith('http') || imagePath.startsWith('https')) {
     return imagePath;
   }
-  const apiBase = API.defaults.baseURL ? API.defaults.baseURL.replace('/api', '') : 'https://spend-sense-backend-1.onrender.com';
-  return `${apiBase}${imagePath}`;
+  let apiBase = API.defaults.baseURL ? API.defaults.baseURL.replace('/api', '') : 'https://spend-sense-backend-1.onrender.com';
+  if (!apiBase.endsWith('/')) {
+    apiBase += '/';
+  }
+  const cleanPath = imagePath.startsWith('/') ? imagePath.slice(1) : imagePath;
+  return `${apiBase}${cleanPath}`;
 };
 
 export default API;
