@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useFinance } from '../context/FinanceContext';
 import { getProfileImageUrl } from '../services/api';
-import logoImg from '../assets/logo.jpg';
+import logoImg from '../assets/logo.png';
 import {
   FiGrid,
   FiTrendingUp,

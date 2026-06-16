@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { OnboardingIllustration } from '../components/Illustrations';
 import { FiUser, FiMail, FiLock, FiCamera, FiAlertCircle } from 'react-icons/fi';
-import logoImg from '../assets/logo.jpg';
+import logoImg from '../assets/logo.png';
 
 const Register = () => {
   const { register, error, setError } = useAuth();
